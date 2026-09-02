@@ -1,6 +1,6 @@
 name: Second CI
 
-on:
+on: # This workflow is triggered on push events to the main branch
   push
 
 jobs:
