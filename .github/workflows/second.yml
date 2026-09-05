@@ -1,13 +1,14 @@
-name: Second CI
+name: Second CI # This is the second workflow that runs on push events to the main branch
 
 on: # This workflow is triggered on push events to the main branch
-  push
+  # push
+   workflow_dispatch:
 
-jobs:
+jobs: # This defines the jobs for the workflow
   build:
     runs-on: ubuntu-latest
 
-    steps:
+    steps: # This defines the steps for the build job
       - name: Say Hello
         run: echo 'Hello from the second workflow!'
 
