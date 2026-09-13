@@ -1,0 +1,47 @@
+name: Hello Node CI
+
+on: # 
+   push:
+   workflow_dispatch:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '25'
+
+      - name: install dependencies
+        working-directory: docker/app1-hello/node
+        run: npm ci
+
+      - name: Run tests (If any)
+        working-directory: docker/app1-hello/node
+        run: npm test --if-present
+
+  docker-build-push:
+    runs-on: ubuntu-latest
+    needs: build-test
+
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: "Build and push Docker image"
+        uses: docker/build-push-action@v4
+        with:
+          context: docker/app1-hello/node
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/hello-node:latest
