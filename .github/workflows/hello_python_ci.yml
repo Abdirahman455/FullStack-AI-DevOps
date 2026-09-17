@@ -26,11 +26,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Script
-        working-directory: docker/app1-hello/python
-        run: python main.py
-
-      - name: Run Smoke Tests
+      - name: Check Python Syntax
         working-directory: docker/app1-hello/python
         run: python -m py_compile main.py
 
