@@ -98,4 +98,4 @@ jobs:
           run: kubectl get nodes
         
         - name: Deploy to AWS (Kubernetes)
-          uses: actions/checkout@v5
+          uses: kubectl apply -f k8s/aws/app1-hello
