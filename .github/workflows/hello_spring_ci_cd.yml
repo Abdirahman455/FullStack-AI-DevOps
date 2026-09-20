@@ -88,7 +88,7 @@ jobs:
         uses: azure/setup-kubectl@v4
 
       - name: Update kubeconfig for EKS cluster
-        run: aws eks update-kubeconfig --name hello-spring-eks-cluster --region us-east-2
+        run: aws eks update-kubeconfig --name hello-cluster --region us-east-2
 
       - name: Verify Connection to EKS Cluster
         run: kubectl get nodes
