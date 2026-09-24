@@ -3,9 +3,9 @@ name: Hello Spring  App AWS EKS CI/CD
 on:
 
   workflow_dispatch:
-  push:
-   # branches:
-   #   - main
+   push:
+    braches:
+      - main
 
    paths:
       - 'docker/app1-hello/springboot/hello-spring/**'
