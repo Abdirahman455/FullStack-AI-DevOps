@@ -1,4 +1,4 @@
-name: Hello Spring  App AWS EKS CI/CD
+name: Hello Python App AWS EKS CI/CD
 
 on:
 
@@ -8,7 +8,7 @@ on:
    #   - main
 
    paths:
-      - 'docker/app1-hello/springboot/hello-spring/**'
+      - 'docker/app1-hello/python/hello-python/**'
     
 
 jobs:
@@ -16,24 +16,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Set up JDK
-        uses: actions/setup-java@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
-          java-version: 21
-          distribution: temurin
+        python-version: '3.13' 
+      - run: python my_script.py
 
-      - name: Build and Test (Maven)
-        working-directory: docker/app1-hello/springboot/hello-spring
-        run: mvn -B clean verify
+      - name: Build and Test (Python)
+        working-directory: docker/app1-hello/python/hello-python
+        run: python -m unittest discover -s tests
 
       - name: Upload Test Reports
         uses: actions/upload-artifact@v7
         with:
           name: test-reports
-          path: docker/app1-hello/springboot/hello-spring/target/surefire-reports
+          path: docker/app1-hello/python/hello-python
 
   docker-build-push:
     runs-on: ubuntu-latest
@@ -41,17 +38,16 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
-      - name: Set up JDK
-        uses: actions/setup-java@v5
+      - name: Set up Python
+        uses: actions/setup-python@v7
         with:
-          java-version: 21
-          distribution: temurin
+            python-version: '3.13'
 
-      - name: Build JAR for Docker
-        working-directory: docker/app1-hello/springboot/hello-spring
-        run: mvn -B clean package -DskipTests
+      - name: Build and Test (Python)
+        working-directory: docker/app1-hello/python/hello-python
+        run: python -m unittest discover -s tests
 
       - name: Login to Docker Hub
         uses: docker/login-action@v4
@@ -62,12 +58,12 @@ jobs:
       - name: Build and Push Dockerhub
         uses: docker/build-push-action@v7
         with:
-          context: docker/app1-hello/springboot/hello-spring
+          context: docker/app1-hello/python/hello-python
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/hello-spring:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/hello-spring:${{ github.sha }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/hello-spring:${{ github.ref_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/hello-python:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/hello-python:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/hello-python:${{ github.ref_name }}
 
   deploy-aws-eks:
     runs-on: ubuntu-latest
@@ -75,7 +71,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6.3.0

@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: app1-hello
-          image: abdirahman7/hello-spring
+          image: abdirahman7/hello-node:latest
 
           env:
             - name: ENV_VALUE
