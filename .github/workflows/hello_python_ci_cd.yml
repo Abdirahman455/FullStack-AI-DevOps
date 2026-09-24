@@ -1,4 +1,4 @@
-name: Hello Python App AWS EKS CI/CD
+name: Hello Python  AWS EKS CI/CD
 
 on:
 
