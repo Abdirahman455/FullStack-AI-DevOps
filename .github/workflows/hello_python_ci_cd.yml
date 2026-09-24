@@ -92,7 +92,7 @@ jobs:
         run: |
           aws eks update-kubeconfig \
             --name hello-cluster \
-            --region us-east-2
+            --region  eu-central-1
 
       - name: Verify AWS Identity
         run: |
